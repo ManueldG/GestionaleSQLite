@@ -65,8 +65,9 @@ public class Gestionale {
 	private JTextField textField_6;
 	private JTextField textField_9;
 	private JTextField textField_10;
-	private JLabel lblNewLabel_6_3_1_2;
 	private JComboBox textField_11;
+	private JLabel lblNewLabel_6_3_1_2;
+	
 
 	/**
 	 * Launch the application.
@@ -100,7 +101,7 @@ public class Gestionale {
 		
 		frame = new JFrame();
 		frame.getContentPane().setBounds(new Rectangle(0, 0, 0, 300));
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 450, 340);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
@@ -161,6 +162,7 @@ public class Gestionale {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
 		textField_2.setText(soci.newTessera().toString());
 		textField_2.setColumns(10);
 		textField_2.setBounds(91, 95, 96, 20);
@@ -337,7 +339,7 @@ public class Gestionale {
 				
 			}
 		});
-		btnNewButton_2.setBounds(141, 203, 89, 23);
+		btnNewButton_2.setBounds(165, 233, 89, 23);
 		panel_1.add(btnNewButton_2);
 		
 		lblNewLabel_6_3_1_2 = new JLabel("tipo");
@@ -361,6 +363,31 @@ public class Gestionale {
 				"data", "descrizione", "socio", "tipo", "importo", "n\u00B0 fattura"
 			}
 		));
+		
+		
+		DefaultTableModel dtm2 = (DefaultTableModel) table_1.getModel();
+		
+		Movimenti movimenti = new Movimenti();
+		
+		List<Movimenti> datiMovimenti = movimenti.selectAll();
+		
+		for (Movimenti m : datiMovimenti) {
+			
+			Vector<Comparable> row = new Vector<Comparable>();
+			
+			row.add(m.getDate());
+			row.add(m.getCausale());
+			row.add(m.getSocio());
+			row.add(m.getTipo());
+			row.add(m.getImporto());
+			row.add(m.getNumero());
+						
+						
+			dtm2.addRow(row);
+			
+		}
+		//end
+		
 		scrollPane_1.setViewportView(table_1);
 		
 		
@@ -388,7 +415,8 @@ public class Gestionale {
 			dtm.addRow(row);
 			
 		}
-		//end
+		
+		
 		
 		
 		

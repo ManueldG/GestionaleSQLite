@@ -7,11 +7,15 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import it.java.business.GestionaleBusiness;
 
@@ -157,6 +161,54 @@ public class Movimenti extends Tables{
             
         }  
     }  
+    
+    /*
+     * Select All
+     * return List<soci>
+     */
+    
+    public List<Movimenti> selectAll(){  
+    	
+    	String table = this.getClass().getSimpleName();
+    	
+        String sql = "SELECT * FROM " + table; 
+        
+        List<Movimenti> result = new ArrayList<Movimenti>();
+        
+        Connection rf ;
+                
+        try {  
+        	
+        	// create a connection to the database  
+            rf = GestionaleBusiness.getConnection();
+            Statement stmt  = rf.createStatement();  
+            ResultSet rs    = stmt.executeQuery(sql);  
+            
+            // loop through the result set  
+            while (rs.next()) {  
+            	
+            	Movimenti m = new Movimenti();
+            	m.setId(rs.getInt(1));
+            	m.setDate(rs.getString(2));
+            	m.setNumero(rs.getInt(3));
+            	m.setSocio(rs.getString(4)); 
+            	m.setImporto(rs.getInt(5));
+            	m.setTipo(rs.getInt(6));
+            	m.setCausale(rs.getString(7));
+            	m.setIva(rs.getString(8));
+            	m.setNote(rs.getString(9));            	
+            	                 
+                result.add(m);
+            }  
+        } 
+        
+        catch (SQLException e) {  
+            System.out.println(e.getMessage());  
+        }
+        System.out.println(result);
+       
+		return result;
+    }
 	
 	
 	

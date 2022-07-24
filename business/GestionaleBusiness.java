@@ -26,19 +26,15 @@ public class GestionaleBusiness {
 	protected static Movimenti movimenti = new Movimenti();
 		 
     public static Connection connect() throws Exception { 
-    	
-       
+    	       
         	try {  
             // db parameters  
-            String url = "jdbc:sqlite:C:/sqlite/" + fileName;
-            
-            
+            String url = "jdbc:sqlite:C:/sqlite/" + fileName;             
 			
             // create a connection to the database             
             rf = DriverManager.getConnection(url);  
-            
-            System.out.println("Connection to SQLite has been established.");  
-            
+           
+            System.out.println("Connection to SQLite has been established.");              
               
 	        } 
 	        catch (SQLException e) {
@@ -59,22 +55,24 @@ public class GestionaleBusiness {
     }
     
     public static Connection getConnection() { 
-    	
-    	
+    	    	
         if (rf != null) {
         	return rf;
         } 
         else
         try {
+        	
 			rf = connect();
 			return rf;
-		} catch (Exception e) {
+		} 
+        catch (Exception e) {
+			
 			System.out.println(e);
 			e.printStackTrace();
+			
 		}
-        System.out.println("null");
-        return rf;
-                
+        
+        return rf;                
 		 
      }
     
@@ -84,14 +82,15 @@ public class GestionaleBusiness {
      */
     
     public static void createNewDatabase(String fileName) {  
-    	       	        
-        
+    	               
         try {  
             
-            if (rf != null) {  
+            if (rf != null) { 
+            	
                 DatabaseMetaData meta = rf.getMetaData();  
                 System.out.println("The driver name is " + ((DatabaseMetaData) rf).getDriverName());  
-                System.out.println("A new database has been created.");  
+                System.out.println("A new database has been created.");
+                
             } 
             System.out.println("Close");  
             rf.close();            
