@@ -63,6 +63,10 @@ public class Gestionale {
 	private JTextField textField_7;
 	private JTextField textField_8;
 	private JTextField textField_6;
+	private JTextField textField_9;
+	private JTextField textField_10;
+	private JLabel lblNewLabel_6_3_1_2;
+	private JComboBox textField_11;
 
 	/**
 	 * Launch the application.
@@ -240,9 +244,8 @@ public class Gestionale {
 		panel_1.setLayout(null);
 		
 		
-		
 		SpinnerDateModel model = new SpinnerDateModel();
-		JSpinner spinner = new JSpinner(model);
+		JSpinner spinner = new JSpinner(new SpinnerDateModel(new Date(1658666897243L), null, null, Calendar.DAY_OF_MONTH));
 
 		JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "dd.MM.yyyy");
 		DateFormatter formatter = (DateFormatter)editor.getTextField().getFormatter();
@@ -253,23 +256,76 @@ public class Gestionale {
 		panel_1.add(spinner);
 		
 		textField_5 = new JTextField();
-		textField_5.setBounds(240, 36, 96, 20);
+		textField_5.setBounds(312, 36, 96, 20);
 		panel_1.add(textField_5);
 		textField_5.setColumns(10);
 		
 		JLabel lblNewLabel_6 = new JLabel("N\u00B0 fattura");
-		lblNewLabel_6.setBounds(181, 39, 49, 14);
+		lblNewLabel_6.setBounds(253, 39, 49, 14);
 		panel_1.add(lblNewLabel_6);
+		
+		JLabel lblNewLabel_6_1 = new JLabel("causale");
+		lblNewLabel_6_1.setBounds(264, 86, 38, 14);
+		panel_1.add(lblNewLabel_6_1);
+		
+		textField_7 = new JTextField();
+		textField_7.setColumns(10);
+		textField_7.setBounds(312, 83, 96, 20);
+		panel_1.add(textField_7);
+		
+		JLabel lblNewLabel_6_2 = new JLabel("socio");
+		lblNewLabel_6_2.setBounds(35, 86, 30, 14);
+		panel_1.add(lblNewLabel_6_2);
+		
+		textField_8 = new JTextField();
+		textField_8.setColumns(10);
+		textField_8.setBounds(75, 86, 96, 20);
+		panel_1.add(textField_8);
+		
+		JLabel lblNewLabel_6_3 = new JLabel("importo");
+		lblNewLabel_6_3.setBounds(31, 128, 49, 14);
+		panel_1.add(lblNewLabel_6_3);
+		
+		textField_6 = new JTextField();
+		textField_6.setColumns(10);
+		textField_6.setBounds(75, 125, 96, 20);
+		panel_1.add(textField_6);
+		
+		JLabel lblNewLabel_6_3_1 = new JLabel("note");
+		lblNewLabel_6_3_1.setBounds(272, 134, 30, 14);
+		panel_1.add(lblNewLabel_6_3_1);
+		
+		textField_9 = new JTextField();
+		textField_9.setColumns(10);
+		textField_9.setBounds(312, 128, 96, 20);
+		panel_1.add(textField_9);
+		
+		JLabel lblNewLabel_6_3_1_1 = new JLabel("IVA");
+		lblNewLabel_6_3_1_1.setBounds(48, 173, 49, 14);
+		panel_1.add(lblNewLabel_6_3_1_1);
+		
+		textField_10 = new JTextField();
+		textField_10.setColumns(10);
+		textField_10.setBounds(75, 170, 96, 20);
+		panel_1.add(textField_10);
+		
+		
+		
 		
 		JButton btnNewButton_2 = new JButton("Inserisci");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				movimenti.setImporto(Integer.parseInt(textField_6.getText()));
-				//movimenti.setDate(spinner.getValue());
-				movimenti.setSocio(textField_8.getText());
-				movimenti.setCausale(textField_7.getText());
 				movimenti.setNumero(Integer.parseInt(textField_5.getText()));
+				movimenti.setDate( spinner.getValue().toString());
+				movimenti.setSocio(textField_8.getText());
+				movimenti.setImporto(Integer.parseInt(textField_6.getText()));
+				movimenti.setTipo(0);
+				movimenti.setCausale(textField_7.getText());
+				movimenti.setIva(textField_7.getText());
+				movimenti.setNote(null);
+				
+				
 				try {
 					movimenti.insert();
 				} catch (SQLException e1) {
@@ -281,35 +337,18 @@ public class Gestionale {
 				
 			}
 		});
-		btnNewButton_2.setBounds(31, 175, 89, 23);
+		btnNewButton_2.setBounds(141, 203, 89, 23);
 		panel_1.add(btnNewButton_2);
 		
-		JLabel lblNewLabel_6_1 = new JLabel("causale");
-		lblNewLabel_6_1.setBounds(181, 86, 49, 14);
-		panel_1.add(lblNewLabel_6_1);
+		lblNewLabel_6_3_1_2 = new JLabel("tipo");
+		lblNewLabel_6_3_1_2.setBounds(272, 173, 30, 14);
+		panel_1.add(lblNewLabel_6_3_1_2);
 		
-		textField_7 = new JTextField();
-		textField_7.setColumns(10);
-		textField_7.setBounds(240, 83, 96, 20);
-		panel_1.add(textField_7);
+		textField_11 = new JComboBox();
+		textField_11.setModel(new DefaultComboBoxModel(new String[] {"entrata", "uscita"}));
+		textField_11.setBounds(312, 167, 96, 20);
+		panel_1.add(textField_11);
 		
-		JLabel lblNewLabel_6_2 = new JLabel("socio");
-		lblNewLabel_6_2.setBounds(16, 89, 38, 14);
-		panel_1.add(lblNewLabel_6_2);
-		
-		textField_8 = new JTextField();
-		textField_8.setColumns(10);
-		textField_8.setBounds(75, 86, 96, 20);
-		panel_1.add(textField_8);
-		
-		JLabel lblNewLabel_6_3 = new JLabel("importo");
-		lblNewLabel_6_3.setBounds(16, 128, 49, 14);
-		panel_1.add(lblNewLabel_6_3);
-		
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
-		textField_6.setBounds(75, 125, 96, 20);
-		panel_1.add(textField_6);
 		
 		scrollPane_1 = new JScrollPane();
 		tabbedPane.addTab("Movimenti", null, scrollPane_1, null);

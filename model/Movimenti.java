@@ -18,7 +18,7 @@ import it.java.business.GestionaleBusiness;
 
 public class Movimenti extends Tables{
 	
-	int date;
+	String date;
 	int numero;
 	String socio;
 	int importo;
@@ -33,15 +33,15 @@ public class Movimenti extends Tables{
 		
 	}
 
-	public int getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(int date) {
+	public void setDate(String string) {
 				
 		
 		    
-		this.date =  date;
+		this.date =  string;
 	}
 
 	public int getNumero() {
@@ -137,7 +137,7 @@ public class Movimenti extends Tables{
             PreparedStatement pstmt = conn.prepareStatement(sql); 
                         
             pstmt.setInt(1, this.getNumero()); 
-            pstmt.setInt(2, this.getDate()); 
+            pstmt.setString(2, this.getDate()); 
             pstmt.setString(3, this.getSocio()); 
             pstmt.setInt(4, this.getImporto()); 
             pstmt.setInt(5, this.getTipo()); 

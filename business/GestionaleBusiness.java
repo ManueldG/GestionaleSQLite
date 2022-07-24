@@ -20,7 +20,7 @@ import it.java.model.Soci;
 
 public class GestionaleBusiness {  
 		
-	private static String fileName="dba.db"; //nome file 
+	private static String fileName="db.db"; //nome file 
 	protected static Connection rf;
 	protected static Soci soci = new Soci();
 	protected static Movimenti movimenti = new Movimenti();
