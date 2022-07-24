@@ -18,11 +18,11 @@ import it.java.business.GestionaleBusiness;
 
 public class Movimenti extends Tables{
 	
-	Date date;
+	int date;
 	int numero;
 	String socio;
 	int importo;
-	String tipo;
+	int tipo;
 	String causale;
 	String iva;
 	String note;
@@ -33,13 +33,13 @@ public class Movimenti extends Tables{
 		
 	}
 
-	public Date getDate() {
+	public int getDate() {
 		return date;
 	}
 
-	public void setDate(int day, int month, int year, int hour, int minute) {
+	public void setDate(int date) {
 				
-		Date date=null;
+		
 		    
 		this.date =  date;
 	}
@@ -68,11 +68,11 @@ public class Movimenti extends Tables{
 		this.importo = i;
 	}
 
-	public String getTipo() {
+	public int getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(String tipo) {
+	public void setTipo(int tipo) {
 		this.tipo = tipo;
 	}
 
@@ -137,11 +137,11 @@ public class Movimenti extends Tables{
             PreparedStatement pstmt = conn.prepareStatement(sql); 
                         
             pstmt.setInt(1, this.getNumero()); 
-            pstmt.setDate(2, this.getDate()); 
+            pstmt.setInt(2, this.getDate()); 
             pstmt.setString(3, this.getSocio()); 
             pstmt.setInt(4, this.getImporto()); 
-            pstmt.setInt(5, this.getNumero()); 
-            pstmt.setDate(6, this.getDate()); 
+            pstmt.setInt(5, this.getTipo()); 
+            pstmt.setString(6, this.getCausale()); 
             pstmt.setString(7, this.getSocio()); 
             pstmt.setInt(8, this.getImporto());            
                         

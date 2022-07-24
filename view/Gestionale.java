@@ -266,8 +266,16 @@ public class Gestionale {
 			public void actionPerformed(ActionEvent e) {
 				
 				movimenti.setImporto(Integer.parseInt(textField_6.getText()));
-				movimenti.setDate(spinner.getValue());
-				
+				//movimenti.setDate(spinner.getValue());
+				movimenti.setSocio(textField_8.getText());
+				movimenti.setCausale(textField_7.getText());
+				movimenti.setNumero(Integer.parseInt(textField_5.getText()));
+				try {
+					movimenti.insert();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 							
 				
 				
