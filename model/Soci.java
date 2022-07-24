@@ -20,6 +20,7 @@ public class Soci extends Tables {
 	private String address;
 	private int tipo;
 	
+	
 	public int getTessera() {
 		return tessera;
 	}
@@ -104,7 +105,6 @@ public class Soci extends Tables {
             while (rs.next()) {  
             	
             	Soci s = new Soci();
-            	
             	s.setId(rs.getInt(1));
             	s.setTessera(rs.getInt(2));
             	s.setName(rs.getString(3));
@@ -121,7 +121,7 @@ public class Soci extends Tables {
             System.out.println(e.getMessage());  
         }
         System.out.println(result);
-        rf = null;
+       
 		return result;
     }
     

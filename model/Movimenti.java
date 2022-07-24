@@ -127,21 +127,27 @@ public class Movimenti extends Tables{
      */
     
     public void insert() throws SQLException {  
-        String sql = "INSERT INTO movimenti(numero, Date, socio, importo) VALUES(?,?,?,?)";  
+        String sql = "INSERT INTO movimenti(numero, Date, socio, importo,tipo,causale,IVA,note) VALUES(?,?,?,?,?,?,?,?)";  
    
         try{          	
             
-            
+            //test
             Connection conn = GestionaleBusiness.getConnection();
             
             PreparedStatement pstmt = conn.prepareStatement(sql); 
-            
-            pstmt.setInt(1, 2345);  
-            pstmt.setInt(2, 345);  
-            pstmt.setString(3,"ffre");
-            pstmt.setFloat(4, 100);
-            
-            pstmt.executeUpdate();  
+                        
+            pstmt.setInt(1, this.getNumero()); 
+            pstmt.setDate(2, this.getDate()); 
+            pstmt.setString(3, this.getSocio()); 
+            pstmt.setInt(4, this.getImporto()); 
+            pstmt.setInt(5, this.getNumero()); 
+            pstmt.setDate(6, this.getDate()); 
+            pstmt.setString(7, this.getSocio()); 
+            pstmt.setInt(8, this.getImporto());            
+                        
+            int result = pstmt.executeUpdate();  
+            pstmt.close();
+            conn.close();
             
         } 
         

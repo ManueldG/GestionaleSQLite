@@ -20,7 +20,7 @@ import it.java.model.Soci;
 
 public class GestionaleBusiness {  
 		
-	private static String fileName="db2.db"; //nome file 
+	private static String fileName="dba.db"; //nome file 
 	protected static Connection rf;
 	protected static Soci soci = new Soci();
 	protected static Movimenti movimenti = new Movimenti();
@@ -38,13 +38,16 @@ public class GestionaleBusiness {
             rf = DriverManager.getConnection(url);  
             
             System.out.println("Connection to SQLite has been established.");  
-                       
+            
               
 	        } 
-	        catch (SQLException e) {  
+	        catch (SQLException e) {
+	        	
 	            System.out.println(e.getMessage()); 
 	            
-	            createNewDatabase(fileName); // creo il databese           
+	            createNewDatabase(fileName); // creo il database
+	            
+	            movimenti.createNewTable(); 
 				soci.createNewTable();// creo la tabella soci
 				 
 				

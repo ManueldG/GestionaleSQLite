@@ -60,7 +60,6 @@ public class Gestionale {
 	
 	protected Soci soci = new Soci();
 	protected Movimenti movimenti = new Movimenti();
-	
 	private JTextField textField_7;
 	private JTextField textField_8;
 	private JTextField textField_6;
@@ -118,8 +117,7 @@ public class Gestionale {
 			}
 		));
 		scrollPane.setViewportView(table);
-		
-		
+				
 		//Insert users
 		panel = new JPanel();
 		tabbedPane.addTab("Inserisci nuovo utente", null, panel, null);
@@ -225,18 +223,11 @@ public class Gestionale {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				
-				movimenti.setDate(0, 0, 0, 0, 0);
-				movimenti.setNumero(Integer.parseInt(textField_5.getText()));
-				movimenti.setCausale(textField_7.getText());
-				movimenti.setSocio(textField_8.getText());
-				movimenti.setImporto(Integer.parseInt(textField_6.getText()));
-				
-				
-				textField_5.setText("");
-				textField_6.setText("");
-				textField_7.setText("");
-				textField_8.setText("");
+				textField.setText("");
+				textField_1.setText("");
+				textField_2.setText("");
+				textField_3.setText("");
+				textField_4.setText("");
 				comboBox.setSelectedIndex(0);
 				
 			}
@@ -274,13 +265,19 @@ public class Gestionale {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				movimenti.setImporto(Integer.parseInt(textField_6.getText()));
+				movimenti.setDate(spinner.getValue());
+				
+							
+				
+				
 			}
 		});
 		btnNewButton_2.setBounds(31, 175, 89, 23);
 		panel_1.add(btnNewButton_2);
 		
 		JLabel lblNewLabel_6_1 = new JLabel("causale");
-		lblNewLabel_6_1.setBounds(191, 86, 49, 14);
+		lblNewLabel_6_1.setBounds(181, 86, 49, 14);
 		panel_1.add(lblNewLabel_6_1);
 		
 		textField_7 = new JTextField();
@@ -346,8 +343,7 @@ public class Gestionale {
 		}
 		//end
 		
-		//Insert Users
-		System.out.println(textField.getText());
+		
 		
 		
 	}
