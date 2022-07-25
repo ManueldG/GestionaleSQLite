@@ -112,7 +112,7 @@ public class Movimenti extends Tables{
 		
 		String sql = super.createNewTableHead(name);
 		
-		sql += super.createNewTableBody("id", "BIGINT PRIMARY KEY ,");
+		sql += super.createNewTableBody("id", "INTEGER PRIMARY KEY AUTOINCREMENT ,");
 		sql += super.createNewTableBody("Date", "INTEGER NOT NULL ,");
 		sql += super.createNewTableBody("numero", "INTEGER NOT NULL,");
 		sql += super.createNewTableBody("socio", "TEXT NOT NULL,");

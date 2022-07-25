@@ -36,6 +36,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
 import java.awt.Font;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 
 public class Gestionale {
@@ -106,6 +108,13 @@ public class Gestionale {
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+			
+				System.out.println(e.getSource());
+				
+			}
+		});
 		frame.getContentPane().add(tabbedPane, BorderLayout.NORTH);
 		
 		
@@ -380,8 +389,7 @@ public class Gestionale {
 			row.add(m.getSocio());
 			row.add(m.getTipo());
 			row.add(m.getImporto());
-			row.add(m.getNumero());
-						
+			row.add(m.getNumero());						
 						
 			dtm2.addRow(row);
 			
