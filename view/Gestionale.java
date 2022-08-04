@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DateFormatter;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -161,9 +160,16 @@ public class Gestionale {
 			new Object[][] {
 			},
 			new String[] {
-					"ID", "Tessera", "Nome", "Cognome", "Telefono", "Indirizzo", "Tipo"
+				"ID", "Tessera", "Nome", "Cognome", "Telefono", "Indirizzo", "Tipo", "Boolean"
 			}
-		));
+		) {
+			Class[] columnTypes = new Class[] {
+				Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Boolean.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+		});
 		
 			
 		scrollPane.setViewportView(table);
@@ -497,6 +503,7 @@ public class Gestionale {
 			row.add(s.getTelephone());
 			row.add(s.getAddress());
 			row.add(s.getTipo());
+			
 			
 			L l = new L();
 			
