@@ -13,6 +13,9 @@ import java.sql.Statement;
 
 import java.util.*;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import it.java.model.Movimenti;
 import it.java.model.Row;
 import it.java.model.Soci;
@@ -20,21 +23,27 @@ import it.java.model.Soci;
 
 public class GestionaleBusiness {  
 		
-	private static String fileName="db1.db"; //nome file 
+	private static String fileName="db.db"; //nome file 
 	protected static Connection rf;
 	protected static Soci soci = new Soci();
 	protected static Movimenti movimenti = new Movimenti();
-		 
-    public static Connection connect() throws Exception { 
+	private static GestionaleBusiness gb;
+	
+    public static Connection getConnections() throws Exception { 
     	       
         	try {  
+        		
             // db parameters  
             String url = "jdbc:sqlite:C:/sqlite/" + fileName;             
 			
-            // create a connection to the database             
-            rf = DriverManager.getConnection(url);  
-           
-            System.out.println("Connection to SQLite has been established.");              
+            // create a connection to the database   
+            if (rf == null) {
+            	
+            	rf = DriverManager.getConnection(url);  
+               	System.out.println("Connection to SQLite has been established."); 
+               	
+            }
+            	             
             
 	        } 
 	        catch (SQLException e) {
@@ -47,32 +56,19 @@ public class GestionaleBusiness {
 								
 	        }
                         
-        return rf;        
-		 
+        return rf;    
+        
     }
     
-    public static Connection getConnection() { 
+    public static GestionaleBusiness getInstance() { 
     	    	
-        if (rf != null) {
+        if (gb == null) {
         	
-        	return rf;
+        	 gb = new GestionaleBusiness();
         	
-        } 
-            
-        try {
-        	
-			rf = connect();
-			return rf;
-			
-		} 
-        catch (Exception e) {
-			
-			System.out.println(e);
-			e.printStackTrace();
-			
-		}
+        }             
         
-        return rf;                
+        return gb;                
 		 
      }
     
@@ -96,7 +92,9 @@ public class GestionaleBusiness {
         } 
         
         catch (SQLException e) {  
-            System.out.println(e.getMessage());  
+            System.out.println(e.getMessage()); 
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "Errore!!!" + e);
         }  
     }    		
 	
@@ -127,9 +125,11 @@ public class GestionaleBusiness {
 						catch (SQLException e) {
 							
 							e.printStackTrace();
+							JFrame frame = new JFrame();
+				            JOptionPane.showMessageDialog(frame, "Hello there! How are you today?");
 						} 					
 						
-						System.out.print("chiuso2  " + data.getName()+" ");
+						
 					}				
 					
 				}				

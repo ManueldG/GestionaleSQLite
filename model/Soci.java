@@ -1,5 +1,7 @@
 package it.java.model;
 
+import static javax.swing.JOptionPane.showMessageDialog;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,6 +10,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import it.java.business.GestionaleBusiness;
 
@@ -19,6 +24,7 @@ public class Soci extends Tables {
 	private String telephone;
 	private String address;
 	private int tipo;
+	private Boolean remove;
 	
 	
 	public int getTessera() {
@@ -52,12 +58,22 @@ public class Soci extends Tables {
 		this.address = address;
 	}
 	public int getTipo() {
-		return tipo;
+		
+		return tipo;			
+		
 	}
 	public void setTipo(int i) {
+		
 		this.tipo = i;
+		
 	}
 	
+	public Boolean getRemove() {
+		return remove;
+	}
+	public void setRemove(Boolean remove) {
+		this.remove = remove;
+	}
 	public void createNewTable() throws Exception {
 		
 		String name = this.getClass().getSimpleName();
@@ -92,12 +108,17 @@ public class Soci extends Tables {
         
         List<Soci> result = new ArrayList<Soci>();
         
-        Connection rf ;
+        Connection rf = null ;
                 
         try {  
         	
         	// create a connection to the database  
-            rf = GestionaleBusiness.getConnection();
+            try {
+				rf = GestionaleBusiness.getInstance().getConnections();
+			} catch (Exception e) {
+				showMessageDialog(null," Errore  !!! \n " + e.getMessage());
+				e.printStackTrace();
+			}
             Statement stmt  = rf.createStatement();  
             ResultSet rs    = stmt.executeQuery(sql);  
             
@@ -118,10 +139,9 @@ public class Soci extends Tables {
         } 
         
         catch (SQLException e) {  
-            System.out.println(e.getMessage());  
+        	showMessageDialog(null," Errore  !!! \n " + e.getMessage());
         }
-        System.out.println(result);
-       
+               
 		return result;
     }
     
@@ -131,8 +151,15 @@ public class Soci extends Tables {
  	   
         try{          	
              
-        	Connection conn = GestionaleBusiness.getConnection();
+        	Connection conn = null;
+			try {
+				conn = GestionaleBusiness.getConnections();
+			} catch (Exception e) {
+				showMessageDialog(null," Errore  !!! \n " + e.getMessage());
+				e.printStackTrace();
+			}
             PreparedStatement pstmt = conn.prepareStatement(super.insertHead()); 
+            
             
             pstmt.setInt(1, s.getTessera()); 
             pstmt.setString(2, s.getName()); 
@@ -152,6 +179,7 @@ public class Soci extends Tables {
         catch (SQLException e) {  
         	
             System.out.println(e.getMessage());  
+            showMessageDialog(null," Errore  !!! \n " + e.getMessage());
             return 0;
         }
     }   
@@ -163,7 +191,15 @@ public class Soci extends Tables {
     	String sql = " SELECT MAX(tessera) FROM soci;";
     	try {
     		
-    		Connection rf = GestionaleBusiness.getConnection();
+    		Connection rf = null;
+			try {
+				rf = GestionaleBusiness.getConnections();
+			} catch (Exception e) {
+				
+				showMessageDialog(null," Errore  !!! \n " + e.getMessage());
+				e.printStackTrace();
+				
+			}
 			Statement stmt = rf.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
 			Integer max = rs.getInt(1) + 1;
@@ -172,17 +208,50 @@ public class Soci extends Tables {
     	catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+			showMessageDialog(null," Errore  !!! \n " + e1.getMessage());
 			return null;
     	}
     	
     }
     
-    
-    
-    
-	
-	
-	
+
+public String[] getSoci(){  
+    	
+    	String table = this.getClass().getSimpleName();
+    	
+        String sql = "SELECT name,secondname FROM " + table; 
+        
+        ArrayList<String> result = new ArrayList<String> ();
+        
+        Connection rf = null ;
+                
+        try {  
+        	
+        	// create a connection to the database  
+            try {
+				rf = GestionaleBusiness.getConnections();
+			} catch (Exception e) {
+				showMessageDialog(null," Errore  !!! \n " + e.getMessage());
+				e.printStackTrace();
+			}
+            Statement stmt  = rf.createStatement();  
+            ResultSet rs    = stmt.executeQuery(sql);  
+            
+            
+            // loop through the result set  
+            while (rs.next()) {              	
+            	
+                result.add(rs.getString(1) + " " + rs.getString(2));
+                                
+            }  
+        } 
+        
+        catch (SQLException e) {  
+        	showMessageDialog(null," Errore  !!! \n " + e.getMessage());
+        }
+        String[] array = result.toArray(new String[0]);  
+		return (array);
+    }
 	
 
 }

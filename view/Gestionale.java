@@ -10,12 +10,14 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DateFormatter;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import java.awt.Rectangle;
 
+import it.java.business.GestionaleBusiness;
 import it.java.model.Movimenti;
 import it.java.model.Soci;
 import javax.swing.JLabel;
@@ -23,6 +25,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -37,8 +44,15 @@ import java.util.GregorianCalendar;
 import java.util.Calendar;
 import java.awt.Font;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
-
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.Color;
+import javax.swing.JCheckBox;
 
 public class Gestionale {
 
@@ -47,28 +61,35 @@ public class Gestionale {
 	private JScrollPane scrollPane;
 	private JTable table;
 	private JPanel panel;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	
 	private JLabel lblNewLabel_3;
-	private JTextField textField_3;
 	private JLabel lblNewLabel_4;
-	private JTextField textField_4;
 	private JLabel lblNewLabel_5;
+	private JLabel lblNewLabel_6;
+	
 	private JScrollPane scrollPane_1;
 	private JTable table_1;
 	private JPanel panel_1;
-	private JTextField textField_5;
 	
-	protected Soci soci = new Soci();
-	protected Movimenti movimenti = new Movimenti();
-	private JTextField textField_7;
-	private JTextField textField_8;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
+	private JTextField textField_5;
 	private JTextField textField_6;
+	private JTextField textField_7;
+	private JComboBox textField_8;
 	private JTextField textField_9;
 	private JTextField textField_10;
 	private JComboBox textField_11;
-	private JLabel lblNewLabel_6_3_1_2;
+	
+	
+	protected Soci soci = new Soci();
+	protected Movimenti movimenti = new Movimenti();
+	private JLabel lblNewLabel_8;
+	private JCheckBox chckbxNewCheckBox;
+	
 	
 
 	/**
@@ -76,6 +97,20 @@ public class Gestionale {
 	 * @author Manuel
 	 * 
 	 */
+	
+	
+	private class MyListener implements TableModelListener {
+
+		public void tableChanged(TableModelEvent e) {
+
+			System.out.println(e.toString());
+
+		}
+		
+	}
+	
+	
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -99,23 +134,19 @@ public class Gestionale {
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	@SuppressWarnings("unchecked")
 	private void initialize() {
 		
 		frame = new JFrame();
 		frame.getContentPane().setBounds(new Rectangle(0, 0, 0, 300));
 		frame.setBounds(100, 100, 450, 340);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		frame.getContentPane().setLayout(null);
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-			
-				System.out.println(e.getSource());
-				
-			}
-		});
-		frame.getContentPane().add(tabbedPane, BorderLayout.NORTH);
+		tabbedPane.setBounds(0, 0, 436, 303);
+		
+		frame.getContentPane().add(tabbedPane);
 		
 		
 		// Users list
@@ -123,14 +154,22 @@ public class Gestionale {
 		tabbedPane.addTab("Utenti", null, scrollPane, null);
 		
 		table = new JTable();
-		table.setModel(new DefaultTableModel(
+		
+		table.getModel().addTableModelListener(new MyListener());
+		
+		table.setModel(new TableModel(
 			new Object[][] {
 			},
 			new String[] {
-					"Tessera", "Nome", "Cognome", "Telefono", "Indirizzo", "Tipo"
+					"ID", "Tessera", "Nome", "Cognome", "Telefono", "Indirizzo", "Tipo"
 			}
 		));
+		
+			
 		scrollPane.setViewportView(table);
+		
+		JButton btnNewButton_3 = new JButton("New button");
+		scrollPane.setColumnHeaderView(btnNewButton_3);
 				
 		//Insert users
 		panel = new JPanel();
@@ -219,7 +258,7 @@ public class Gestionale {
 				soci.setAddress(textField_3.getText());
 				soci.setTipo( comboBox.getSelectedIndex());
 				soci.setTelephone(textField_4.getText());	
-				
+								
 				soci.Insert(soci);
 				
 				textField.setText("");
@@ -250,20 +289,21 @@ public class Gestionale {
 		btnNewButton_1.setBounds(223, 170, 96, 20);
 		panel.add(btnNewButton_1);
 		
+				
 		panel_1 = new JPanel();
 		tabbedPane.addTab("Inserisci movimenti", null, panel_1, null);
 		panel_1.setLayout(null);
 		
 		
 		SpinnerDateModel model = new SpinnerDateModel();
-		JSpinner spinner = new JSpinner(new SpinnerDateModel(new Date(1658666897243L), null, null, Calendar.DAY_OF_MONTH));
+		JSpinner spinner = new JSpinner(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_MONTH));
 
-		JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "dd.MM.yyyy");
-		DateFormatter formatter = (DateFormatter)editor.getTextField().getFormatter();
-		formatter.setAllowsInvalid(false); // this makes what you want
-		formatter.setOverwriteMode(true);
 		
-		spinner.setBounds(31, 36, 104, 20);
+		spinner.setEditor(new JSpinner.DateEditor(spinner, "dd/MM/yyyy"));
+		
+		
+		
+		spinner.setBounds(67, 36, 104, 20);
 		panel_1.add(spinner);
 		
 		textField_5 = new JTextField();
@@ -272,11 +312,16 @@ public class Gestionale {
 		textField_5.setColumns(10);
 		
 		JLabel lblNewLabel_6 = new JLabel("N\u00B0 fattura");
-		lblNewLabel_6.setBounds(253, 39, 49, 14);
+		lblNewLabel_6.setLabelFor(textField_5);
+		lblNewLabel_6.setForeground(new Color(0, 0, 0));
+		lblNewLabel_6.setBackground(new Color(255, 20, 147));
+		lblNewLabel_6.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lblNewLabel_6.setBounds(253, 39, 44, 13);
 		panel_1.add(lblNewLabel_6);
 		
 		JLabel lblNewLabel_6_1 = new JLabel("causale");
-		lblNewLabel_6_1.setBounds(264, 86, 38, 14);
+		lblNewLabel_6_1.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lblNewLabel_6_1.setBounds(264, 86, 32, 13);
 		panel_1.add(lblNewLabel_6_1);
 		
 		textField_7 = new JTextField();
@@ -285,16 +330,19 @@ public class Gestionale {
 		panel_1.add(textField_7);
 		
 		JLabel lblNewLabel_6_2 = new JLabel("socio");
-		lblNewLabel_6_2.setBounds(35, 86, 30, 14);
+		lblNewLabel_6_2.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lblNewLabel_6_2.setBounds(35, 86, 30, 13);
 		panel_1.add(lblNewLabel_6_2);
 		
-		textField_8 = new JTextField();
-		textField_8.setColumns(10);
+		textField_8 = new JComboBox();
+		
+		textField_8.setModel(new DefaultComboBoxModel(soci.getSoci()));
 		textField_8.setBounds(75, 86, 96, 20);
 		panel_1.add(textField_8);
 		
 		JLabel lblNewLabel_6_3 = new JLabel("importo");
-		lblNewLabel_6_3.setBounds(31, 128, 49, 14);
+		lblNewLabel_6_3.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lblNewLabel_6_3.setBounds(31, 128, 33, 13);
 		panel_1.add(lblNewLabel_6_3);
 		
 		textField_6 = new JTextField();
@@ -303,7 +351,8 @@ public class Gestionale {
 		panel_1.add(textField_6);
 		
 		JLabel lblNewLabel_6_3_1 = new JLabel("note");
-		lblNewLabel_6_3_1.setBounds(272, 134, 30, 14);
+		lblNewLabel_6_3_1.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lblNewLabel_6_3_1.setBounds(272, 134, 19, 13);
 		panel_1.add(lblNewLabel_6_3_1);
 		
 		textField_9 = new JTextField();
@@ -312,7 +361,8 @@ public class Gestionale {
 		panel_1.add(textField_9);
 		
 		JLabel lblNewLabel_6_3_1_1 = new JLabel("IVA");
-		lblNewLabel_6_3_1_1.setBounds(48, 173, 49, 14);
+		lblNewLabel_6_3_1_1.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lblNewLabel_6_3_1_1.setBounds(48, 173, 16, 13);
 		panel_1.add(lblNewLabel_6_3_1_1);
 		
 		textField_10 = new JTextField();
@@ -320,8 +370,15 @@ public class Gestionale {
 		textField_10.setBounds(75, 170, 96, 20);
 		panel_1.add(textField_10);
 		
+		lblNewLabel_8 = new JLabel("tipo");
+		lblNewLabel_8.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lblNewLabel_8.setBounds(272, 173, 15, 13);
+		panel_1.add(lblNewLabel_8);
 		
-		
+		textField_11 = new JComboBox();
+		textField_11.setModel(new DefaultComboBoxModel(new String[] {"entrata", "uscita"}));
+		textField_11.setBounds(312, 167, 96, 20);
+		panel_1.add(textField_11);		
 		
 		JButton btnNewButton_2 = new JButton("Inserisci");
 		btnNewButton_2.addActionListener(new ActionListener() {
@@ -329,52 +386,61 @@ public class Gestionale {
 				
 				movimenti.setNumero(Integer.parseInt(textField_5.getText()));
 				movimenti.setDate( spinner.getValue().toString());
-				movimenti.setSocio(textField_8.getText());
+				movimenti.setSocio(textField_8.getSelectedIndex());
 				movimenti.setImporto(Integer.parseInt(textField_6.getText()));
-				movimenti.setTipo(0);
+				movimenti.setTipo(textField_11.getSelectedIndex());
 				movimenti.setCausale(textField_7.getText());
-				movimenti.setIva(textField_7.getText());
-				movimenti.setNote(null);
+				movimenti.setIva(textField_10.getText());
+				movimenti.setNote(textField_9.getText());
 				
 				
 				try {
+					
 					movimenti.insert();
-				} catch (SQLException e1) {
+					
+				} 
+				catch (SQLException e1) {
+					
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					
 				}
-							
 				
+				textField_6.setText("");
+				textField_7.setText("");
+				
+				textField_9.setText("");
+				textField_10.setText("");
+				textField_11.setSelectedItem(null);				
 				
 			}
 		});
 		btnNewButton_2.setBounds(165, 233, 89, 23);
 		panel_1.add(btnNewButton_2);
 		
-		lblNewLabel_6_3_1_2 = new JLabel("tipo");
-		lblNewLabel_6_3_1_2.setBounds(272, 173, 30, 14);
-		panel_1.add(lblNewLabel_6_3_1_2);
-		
-		textField_11 = new JComboBox();
-		textField_11.setModel(new DefaultComboBoxModel(new String[] {"entrata", "uscita"}));
-		textField_11.setBounds(312, 167, 96, 20);
-		panel_1.add(textField_11);
-		
+		JLabel lblNewLabel_7 = new JLabel("Data");
+		lblNewLabel_7.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lblNewLabel_7.setBounds(33, 39, 24, 14);
+		panel_1.add(lblNewLabel_7);
 		
 		scrollPane_1 = new JScrollPane();
+				
 		tabbedPane.addTab("Movimenti", null, scrollPane_1, null);
 		
 		table_1 = new JTable();
-		table_1.setModel(new DefaultTableModel(
+		
+		table_1.setModel(new TableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"data", "descrizione", "socio", "tipo", "importo", "n\u00B0 fattura"
+				"ID","data", "descrizione", "socio", "tipo", "importo", "n\u00B0 fattura", "IVA", "Note"
 			}
 		));
 		
 		
-		DefaultTableModel dtm2 = (DefaultTableModel) table_1.getModel();
+		
+		   	
+		TableModel dtm2 = (TableModel) table_1.getModel();
 		
 		Movimenti movimenti = new Movimenti();
 		
@@ -384,26 +450,37 @@ public class Gestionale {
 			
 			Vector<Comparable> row = new Vector<Comparable>();
 			
+			row.add(m.getId());
 			row.add(m.getDate());
 			row.add(m.getCausale());
 			row.add(m.getSocio());
-			row.add(m.getTipo());
-			row.add(m.getImporto());
-			row.add(m.getNumero());						
-						
-			dtm2.addRow(row);
 			
+			switch (m.getTipo()) {
+			
+			case 0:
+				row.add("Entrata");	
+			break;
+			
+			default:
+				row.add("Uscita");
+				
+		}			
+			row.add(m.getImporto());
+			row.add(m.getNumero());		
+			row.add(m.getIva());	
+			row.add(m.getNote());
+			
+			
+									
+			dtm2.addRow(row);
+						
 		}
 		//end
 		
 		scrollPane_1.setViewportView(table_1);
-		
-		
-		
-		// end
-		
+						
 		//Users list		
-		DefaultTableModel dtm = (DefaultTableModel) table.getModel();
+		TableModel dtm = (TableModel) table.getModel();
 		
 		Soci utenti = new Soci();
 		
@@ -413,21 +490,65 @@ public class Gestionale {
 			
 			Vector<Comparable> row = new Vector<Comparable>();
 			
+			row.add(s.getId());
 			row.add(s.getTessera());
 			row.add(s.getName());
 			row.add(s.getSecondName());
 			row.add(s.getTelephone());
 			row.add(s.getAddress());
-			row.add(s.getTipo());			
-						
-			dtm.addRow(row);
+			row.add(s.getTipo());
 			
+			L l = new L();
+			
+			dtm.addTableModelListener(l);
+			
+			System.out.println( dtm.getColumnName(l.getX()));
+			
+			dtm.addRow(row);
+						
+		}		
+		
+	}	
+	
+	class L implements TableModelListener{
+				
+		private int x;		
+		private int y;
+		
+		public int getX() {
+			return x;
 		}
-		
-		
-		
-		
-		
+
+		public void setX(int x) {
+			this.x = x;
+		}
+
+		public int getY() {
+			return y;
+		}
+
+		public void setY(int y) {
+			this.y = y;
+		}	
+
+		@Override
+		public void tableChanged(TableModelEvent e) {
+			
+			this.x=(e.getColumn());
+			this.y=(e.getFirstRow());
+			
+			TableModel dtm = (TableModel) table.getModel();
+			
+			if ((this.getX()>0)&&(this.getY()>=0)) {
+				
+				System.out.println(dtm.getColumnName(getX()));
+				System.out.println(dtm.getDataVector().elementAt(getY()).elementAt(getX()));   
+				
+			}		
+			
+		}	
 		
 	}
 }
+
+ 
