@@ -168,8 +168,7 @@ public class Gestionale {
 			
 		scrollPane.setViewportView(table);
 		
-		JButton btnNewButton_3 = new JButton("New button");
-		scrollPane.setColumnHeaderView(btnNewButton_3);
+		
 				
 		//Insert users
 		panel = new JPanel();
@@ -433,7 +432,7 @@ public class Gestionale {
 			new Object[][] {
 			},
 			new String[] {
-				"ID","data", "descrizione", "socio", "tipo", "importo", "n\u00B0 fattura", "IVA", "Note"
+				"ID", "data", "descrizione", "socio", "tipo", "importo", "n\u00B0 fattura", "IVA", "Note"
 			}
 		));
 		
@@ -480,6 +479,7 @@ public class Gestionale {
 		scrollPane_1.setViewportView(table_1);
 						
 		//Users list		
+		
 		TableModel dtm = (TableModel) table.getModel();
 		
 		Soci utenti = new Soci();
@@ -504,7 +504,7 @@ public class Gestionale {
 			
 			System.out.println( dtm.getColumnName(l.getX()));
 			
-			dtm.addRow(row);
+			 dtm.addRow(row);
 						
 		}		
 		
