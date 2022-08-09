@@ -2,27 +2,9 @@ package it.java.view;
 
 import java.awt.EventQueue;
 import java.awt.BorderLayout;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
-
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.text.DateFormatter;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import java.awt.Rectangle;
-
-import it.java.business.GestionaleBusiness;
-import it.java.model.Movimenti;
-import it.java.model.Soci;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentListener;
 import java.awt.event.ContainerEvent;
@@ -34,24 +16,44 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerDateModel;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.Color;
+import java.awt.Rectangle;
+
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.text.DateFormatter;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.Color;
 import javax.swing.JCheckBox;
+
+import it.java.business.ButtonColumn;
+import it.java.business.GestionaleBusiness;
+import it.java.model.Movimenti;
+import it.java.model.Soci;
 
 public class Gestionale {
 
@@ -87,7 +89,9 @@ public class Gestionale {
 	protected Soci soci = new Soci();
 	protected Movimenti movimenti = new Movimenti();
 	private JLabel lblNewLabel_8;
+	private JLabel lblNewLabel_9;
 	private JCheckBox chckbxNewCheckBox;
+	private JPanel panel_2;
 	
 	
 
@@ -107,8 +111,6 @@ public class Gestionale {
 		}
 		
 	}
-	
-	
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -133,7 +135,7 @@ public class Gestionale {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	private void initialize() {
 		
 		frame = new JFrame();
@@ -142,45 +144,69 @@ public class Gestionale {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
+			
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(0, 0, 436, 303);
 		
 		frame.getContentPane().add(tabbedPane);
 		
+		panel_2 = new JPanel();
+		tabbedPane.addTab("Utenti", null, panel_2, null);
 		
-		// Users list
 		scrollPane = new JScrollPane();
-		tabbedPane.addTab("Utenti", null, scrollPane, null);
+		scrollPane.setBounds(-10, 5, 452, 208);
+		//tabbedPane.addTab("Utenti", null, scrollPane, null);
 		
 		table = new JTable();
 		
 		table.getModel().addTableModelListener(new MyListener());
+		panel_2.setLayout(null);
+		
+		JButton btnNewButtonInt = new JButton("Invio");
+		btnNewButtonInt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		
+		btnNewButtonInt.setBounds(170, 224, 89, 23);
 		
 		table.setModel(new TableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"ID", "Tessera", "Nome", "Cognome", "Telefono", "Indirizzo", "Tipo", "Boolean"
+				"ID", "Tessera", "Nome", "Cognome", "Telefono", "Indirizzo", "Tipo", "Modifica", "Cancella"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Boolean.class
+				Integer.class, Object.class, Object.class, Object.class, Object.class, Integer.class, Object.class, Object.class,Object.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
 		});
+		table.add(btnNewButtonInt);
 		
 			
 		scrollPane.setViewportView(table);
+		panel_2.add(scrollPane);
 		
 		
+		JButton btnNewButton_3 = new JButton("Invio");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				
+			}
+		});
+		btnNewButton_3.setBounds(170, 224, 89, 23);
+		panel_2.add(btnNewButton_3);
+						
 		//Insert users
 		panel = new JPanel();
 		tabbedPane.addTab("Inserisci nuovo utente", null, panel, null);
 		panel.setLayout(null);
 		
+				
 		JLabel lblNewLabel = new JLabel("Nome");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblNewLabel.setBounds(31, 42, 29, 14);
@@ -263,8 +289,9 @@ public class Gestionale {
 				soci.setAddress(textField_3.getText());
 				soci.setTipo( comboBox.getSelectedIndex());
 				soci.setTelephone(textField_4.getText());	
-								
-				soci.Insert(soci);
+					
+				//if (lblNewLabel_9.getText()=="")
+					soci.Insert(soci);
 				
 				textField.setText("");
 				textField_1.setText("");
@@ -293,6 +320,10 @@ public class Gestionale {
 		});
 		btnNewButton_1.setBounds(223, 170, 96, 20);
 		panel.add(btnNewButton_1);
+		
+		lblNewLabel_9 = new JLabel("");
+		lblNewLabel_9.setBounds(192, 11, 49, 14);
+		panel.add(lblNewLabel_9);
 		
 				
 		panel_1 = new JPanel();
@@ -483,10 +514,60 @@ public class Gestionale {
 		//end
 		
 		scrollPane_1.setViewportView(table_1);
-						
+		
+		
+		
 		//Users list		
 		
 		TableModel dtm = (TableModel) table.getModel();
+		JTable t = new JTable(dtm);
+		
+		Action delete = new AbstractAction()
+		{
+		    public void actionPerformed(ActionEvent e)
+		    {
+		        JTable table = (JTable)e.getSource();
+		        Soci s = new Soci();
+		        
+		        int modelRow = Integer.valueOf( e.getActionCommand() );
+		        
+		        Integer id = (Integer) dtm.getValueAt(modelRow, 0);
+		        s.delete(id);
+		        ((TableModel)table.getModel()).removeRow(modelRow);
+		    }
+		};
+		
+		Action modify = new AbstractAction()
+		{
+		    public void actionPerformed(ActionEvent e)
+		    {
+		        JTable table = (JTable)e.getSource();
+		        int modelRow = Integer.valueOf( e.getActionCommand() );
+		        Integer id = (Integer) dtm.getValueAt(modelRow, 0);
+		        System.out.println(id.intValue());
+		        
+		        
+		        tabbedPane.setSelectedIndex(1); //vado al tab 1 (inserisci soci)
+		        
+		        
+		        textField_2.setText(dtm.getValueAt(modelRow,1).toString());
+		        textField.setText(dtm.getValueAt(modelRow,2).toString());
+		        textField_1.setText(dtm.getValueAt(modelRow,3).toString());
+		        textField_3.setText(dtm.getValueAt(modelRow,5).toString());
+		        textField_4.setText(dtm.getValueAt(modelRow,4).toString());
+		        lblNewLabel_9.setText(dtm.getValueAt(modelRow,0).toString());		        
+		        
+		        comboBox.setSelectedIndex((int)(dtm.getValueAt(modelRow,6)));
+		        
+		        
+		    }
+		};
+		 
+		ButtonColumn buttonColumn = new ButtonColumn(table, delete, 8);
+		buttonColumn.setMnemonic(KeyEvent.VK_D);
+		
+		ButtonColumn buttonColumn2 = new ButtonColumn(table, modify, 7);
+		buttonColumn.setMnemonic(KeyEvent.VK_D);
 		
 		Soci utenti = new Soci();
 		
@@ -503,6 +584,10 @@ public class Gestionale {
 			row.add(s.getTelephone());
 			row.add(s.getAddress());
 			row.add(s.getTipo());
+			row.add("m");
+			row.add("c");
+			
+			
 			
 			
 			L l = new L();
@@ -511,7 +596,7 @@ public class Gestionale {
 			
 			System.out.println( dtm.getColumnName(l.getX()));
 			
-			 dtm.addRow(row);
+			dtm.addRow(row);
 						
 		}		
 		

@@ -114,7 +114,7 @@ public class Soci extends Tables {
         	
         	// create a connection to the database  
             try {
-				rf = GestionaleBusiness.getInstance().getConnections();
+				rf = GestionaleBusiness.getConnections();
 			} catch (Exception e) {
 				showMessageDialog(null," Errore  !!! \n " + e.getMessage());
 				e.printStackTrace();
@@ -147,6 +147,8 @@ public class Soci extends Tables {
     
     
     
+    
+    
     public int Insert(Soci s) {
  	   
         try{          	
@@ -159,7 +161,6 @@ public class Soci extends Tables {
 				e.printStackTrace();
 			}
             PreparedStatement pstmt = conn.prepareStatement(super.insertHead()); 
-            
             
             pstmt.setInt(1, s.getTessera()); 
             pstmt.setString(2, s.getName()); 
