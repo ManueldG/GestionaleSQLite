@@ -204,7 +204,7 @@ public class Movimenti extends Tables{
      * return List<soci>
      */
     
-    public List<Movimenti> selectAll(){  
+    public List<Movimenti> selectAllMovimenti() throws SQLException{  
     	
     	String table = this.getClass().getSimpleName();
     	
@@ -214,18 +214,8 @@ public class Movimenti extends Tables{
         
         Connection rf = null ;
                 
-        try {  
-        	
-        	// create a connection to the database  
-            try {
-				rf = GestionaleBusiness.getConnections();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				showMessageDialog(null," Errore  !!! \n " + e.getMessage());
-			}
-            Statement stmt  = rf.createStatement();  
-            ResultSet rs    = stmt.executeQuery(sql);  
+         
+        ResultSet rs    = selectAll();  
             
             // loop through the result set  
             while (rs.next()) {  
@@ -244,13 +234,9 @@ public class Movimenti extends Tables{
             	              
                 result.add(m);
             }  
-        } 
         
-        catch (SQLException e) {  
-            System.out.println(e.getMessage());
-            showMessageDialog(null," Errore  !!! \n " + e.getMessage());
-        }
-               
+        
+          
 		return result;
     }
 	

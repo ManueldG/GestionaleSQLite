@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -18,9 +19,7 @@ import it.java.business.GestionaleBusiness;
 public abstract class Tables {
 	
 	private Integer id;
-	
-	
-	
+			
 	public Tables() {
     	
     }
@@ -70,9 +69,9 @@ public abstract class Tables {
         
     }
 	
-	/*
+	/**
      *  generic request
-     */    
+     **/    
     
     public void query(String sql) {  
                   
@@ -101,13 +100,7 @@ public abstract class Tables {
     }    
     
 	
-    public String insertHead() { 
-    	
-    	String name = this.getClass().getSimpleName();
-        String sql = "INSERT INTO " + name + "(tessera, name, secondname, telephone, address, tipo) VALUES(?,?,?,?,?,?)"; 
-        return sql;
-        
-    }
+    
     
     public String deleteHead() { 
     	
@@ -135,8 +128,7 @@ public abstract class Tables {
 			pstmt.setInt(1, id); 	        
             
 	        boolean result = pstmt.execute(); 
-	        pstmt.close();
-	        conn.close();
+	        
 	        return result;
 	        
 		} catch (SQLException e) {
@@ -144,12 +136,46 @@ public abstract class Tables {
 			e.printStackTrace();
 		} 
 		
-			return false;
+			return false;    	
         
-        
-        
+    }
+    
+    /*
+     * Select All
+     * return List<soci>
+     */
+    
+    public ResultSet selectAll(){  
     	
+    	ResultSet rs = null;
+    	String table = this.getClass().getSimpleName();
+    	
+        String sql = "SELECT * FROM " + table; 
         
+        List<Soci> result = new ArrayList<Soci>();
+        
+        Connection rf = null ;
+                
+        try {  
+        	
+        	// create a connection to the database  
+            try {
+				rf = GestionaleBusiness.getConnections();
+			} catch (Exception e) {
+				showMessageDialog(null," Errore  !!! \n " + e.getMessage());
+				e.printStackTrace();
+			}
+            Statement stmt  = rf.createStatement();  
+            rs    = stmt.executeQuery(sql);  
+        }
+            
+            
+        
+        catch (SQLException e) {  
+        	showMessageDialog(null," Errore  !!! \n " + e.getMessage());
+        }
+               
+		return rs;
     }
         
        	

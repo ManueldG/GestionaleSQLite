@@ -90,27 +90,14 @@ public class Gestionale {
 	protected Movimenti movimenti = new Movimenti();
 	private JLabel lblNewLabel_8;
 	private JLabel lblNewLabel_9;
-	private JCheckBox chckbxNewCheckBox;
 	private JPanel panel_2;
 	
 	
-
 	/**
 	 * Launch the application.
 	 * @author Manuel
 	 * 
 	 */
-	
-	
-	private class MyListener implements TableModelListener {
-
-		public void tableChanged(TableModelEvent e) {
-
-			System.out.println(e.toString());
-
-		}
-		
-	}
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -143,8 +130,7 @@ public class Gestionale {
 		frame.setBounds(100, 100, 450, 340);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		
-			
+					
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(0, 0, 436, 303);
 		
@@ -161,16 +147,7 @@ public class Gestionale {
 		
 		table.getModel().addTableModelListener(new MyListener());
 		panel_2.setLayout(null);
-		
-		JButton btnNewButtonInt = new JButton("Invio");
-		btnNewButtonInt.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
 				
-			}
-		});
-		
-		btnNewButtonInt.setBounds(170, 224, 89, 23);
-		
 		table.setModel(new TableModel(
 			new Object[][] {
 			},
@@ -181,26 +158,18 @@ public class Gestionale {
 			Class[] columnTypes = new Class[] {
 				Integer.class, Object.class, Object.class, Object.class, Object.class, Integer.class, Object.class, Object.class,Object.class
 			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
+			
+		public Class getColumnClass(int columnIndex) {
+			return columnTypes[columnIndex];
 			}
 		});
-		table.add(btnNewButtonInt);
 		
-			
+		
+					
 		scrollPane.setViewportView(table);
 		panel_2.add(scrollPane);
-		
-		
-		JButton btnNewButton_3 = new JButton("Invio");
-		btnNewButton_3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
 				
-			}
-		});
-		btnNewButton_3.setBounds(170, 224, 89, 23);
-		panel_2.add(btnNewButton_3);
-						
+								
 		//Insert users
 		panel = new JPanel();
 		tabbedPane.addTab("Inserisci nuovo utente", null, panel, null);
@@ -280,22 +249,22 @@ public class Gestionale {
 		JButton btnNewButton = new JButton("Invio");
 		btnNewButton.addActionListener(new ActionListener() {
 		
-
 			public void actionPerformed(ActionEvent e) {
-								
+							
+				TableModel dtm = (TableModel) table.getModel();
+				
 				soci.setTessera(Integer.parseInt(textField_2.getText()));	
 				soci.setName(textField.getText());				
 				soci.setSecondName(textField_1.getText());
 				soci.setAddress(textField_3.getText());
 				soci.setTipo( comboBox.getSelectedIndex());
 				soci.setTelephone(textField_4.getText());	
-					
-				//if (lblNewLabel_9.getText()=="")
-					soci.Insert(soci);
+													
+				soci.Insert();				
 				
 				textField.setText("");
 				textField_1.setText("");
-				textField_2.setText("");
+				textField_2.setText(soci.newTessera().toString()); 
 				textField_3.setText("");
 				textField_4.setText("");
 				comboBox.setSelectedIndex(0);
@@ -336,8 +305,7 @@ public class Gestionale {
 
 		
 		spinner.setEditor(new JSpinner.DateEditor(spinner, "dd/MM/yyyy"));
-		
-		
+			
 		
 		spinner.setBounds(67, 36, 104, 20);
 		panel_1.add(spinner);
@@ -471,16 +439,20 @@ public class Gestionale {
 			new String[] {
 				"ID", "data", "descrizione", "socio", "tipo", "importo", "n\u00B0 fattura", "IVA", "Note"
 			}
-		));
-		
-		
+		));	
 		
 		   	
 		TableModel dtm2 = (TableModel) table_1.getModel();
 		
 		Movimenti movimenti = new Movimenti();
 		
-		List<Movimenti> datiMovimenti = movimenti.selectAll();
+		List<Movimenti> datiMovimenti = null;
+		try {
+			datiMovimenti = movimenti.selectAllMovimenti();
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		
 		for (Movimenti m : datiMovimenti) {
 			
@@ -534,6 +506,8 @@ public class Gestionale {
 		        Integer id = (Integer) dtm.getValueAt(modelRow, 0);
 		        s.delete(id);
 		        ((TableModel)table.getModel()).removeRow(modelRow);
+		        
+		        
 		    }
 		};
 		
@@ -544,12 +518,20 @@ public class Gestionale {
 		        JTable table = (JTable)e.getSource();
 		        int modelRow = Integer.valueOf( e.getActionCommand() );
 		        Integer id = (Integer) dtm.getValueAt(modelRow, 0);
+		        
 		        System.out.println(id.intValue());
 		        
-		        
+		        	
 		        tabbedPane.setSelectedIndex(1); //vado al tab 1 (inserisci soci)
 		        
-		        
+		        Soci s = new Soci();
+		        //s.delete(id);
+		        try {
+					s.updateTable(dtm);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 		        textField_2.setText(dtm.getValueAt(modelRow,1).toString());
 		        textField.setText(dtm.getValueAt(modelRow,2).toString());
 		        textField_1.setText(dtm.getValueAt(modelRow,3).toString());
@@ -558,6 +540,7 @@ public class Gestionale {
 		        lblNewLabel_9.setText(dtm.getValueAt(modelRow,0).toString());		        
 		        
 		        comboBox.setSelectedIndex((int)(dtm.getValueAt(modelRow,6)));
+		        dtm.removeRow(modelRow-1);
 		        
 		        
 		    }
@@ -569,38 +552,34 @@ public class Gestionale {
 		ButtonColumn buttonColumn2 = new ButtonColumn(table, modify, 7);
 		buttonColumn.setMnemonic(KeyEvent.VK_D);
 		
-		Soci utenti = new Soci();
+		L list = new  L();		
+		table.getModel().addTableModelListener(list);//listener
 		
-		List<Soci> datiUtenti = utenti.selectAll();
-		
-		for (Soci s : datiUtenti) {
-			
-			Vector<Comparable> row = new Vector<Comparable>();
-			
-			row.add(s.getId());
-			row.add(s.getTessera());
-			row.add(s.getName());
-			row.add(s.getSecondName());
-			row.add(s.getTelephone());
-			row.add(s.getAddress());
-			row.add(s.getTipo());
-			row.add("m");
-			row.add("c");
-			
-			
-			
-			
-			L l = new L();
-			
-			dtm.addTableModelListener(l);
-			
-			System.out.println( dtm.getColumnName(l.getX()));
-			
-			dtm.addRow(row);
-						
-		}		
+		Soci s = new Soci();
+		try {
+			s.updateTable(dtm); //carica i dati nella tabella
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 	}	
+	
+	/**
+	 * 
+	 * Listener per le modifiche della tabella
+	 * 
+	 */
+	
+	private class MyListener implements TableModelListener {
+
+		public void tableChanged(TableModelEvent e) {
+
+			System.out.println(e.toString());
+
+		}
+		
+	}
 	
 	class L implements TableModelListener{
 				

@@ -10,11 +10,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import it.java.business.GestionaleBusiness;
+
+import it.java.view.TableModel;
 
 public class Soci extends Tables {
 	
@@ -69,11 +72,21 @@ public class Soci extends Tables {
 	}
 	
 	public Boolean getRemove() {
+		
 		return remove;
+		
 	}
+	
 	public void setRemove(Boolean remove) {
+		
 		this.remove = remove;
+		
 	}
+	
+	/**
+	 * Crea la tabella Soci 
+	 * @throws Exception
+	 */
 	public void createNewTable() throws Exception {
 		
 		String name = this.getClass().getSimpleName();
@@ -93,34 +106,19 @@ public class Soci extends Tables {
 		super.createNewTableExecute(sql);
 		
 	}        
-      
     
-    /*
-     * Select All
-     * return List<soci>
-     */
+	
     
-    public List<Soci> selectAll(){  
+    /**
+     * Pick all value of Soci table
+     * @return List<Soci>
+     * 
+     **/
+    
+    public List<Soci> selectAllSoci() throws SQLException{  
     	
-    	String table = this.getClass().getSimpleName();
-    	
-        String sql = "SELECT * FROM " + table; 
-        
-        List<Soci> result = new ArrayList<Soci>();
-        
-        Connection rf = null ;
-                
-        try {  
-        	
-        	// create a connection to the database  
-            try {
-				rf = GestionaleBusiness.getConnections();
-			} catch (Exception e) {
-				showMessageDialog(null," Errore  !!! \n " + e.getMessage());
-				e.printStackTrace();
-			}
-            Statement stmt  = rf.createStatement();  
-            ResultSet rs    = stmt.executeQuery(sql);  
+    	List<Soci> result = new ArrayList<Soci>();
+    	ResultSet rs = selectAll();
             
             // loop through the result set  
             while (rs.next()) {  
@@ -135,21 +133,55 @@ public class Soci extends Tables {
             	s.setTipo(rs.getInt(7));
             	                 
                 result.add(s);
-            }  
-        } 
-        
-        catch (SQLException e) {  
-        	showMessageDialog(null," Errore  !!! \n " + e.getMessage());
-        }
+            }         
                
 		return result;
-    }
+    }    
     
+    public TableModel updateTable(TableModel dtm) throws SQLException {
+    	
+    	List<Soci> datiUtenti = selectAllSoci();
+		
+		for (Soci s : datiUtenti) {			
+			
+			dtm.addRow(updateRow(s));
+			
+			}
+		
+		return dtm;		
+	
+    }	   
     
-    
-    
-    
-    public int Insert(Soci s) {
+public  Vector<Comparable> updateRow(Soci s){	
+					
+			Vector<Comparable> row = new Vector<Comparable>();
+			
+			row.add(s.getId());
+			row.add(s.getTessera());
+			row.add(s.getName());
+			row.add(s.getSecondName());
+			row.add(s.getTelephone());
+			row.add(s.getAddress());
+			row.add(s.getTipo());
+			row.add("m");
+			row.add("c");	
+			
+			return row;
+    }	
+
+	public String insertHead() { 
+		
+		String name = this.getClass().getSimpleName();
+	    String sql = "INSERT INTO " + name + "(tessera, name, secondname, telephone, address, tipo) VALUES(?,?,?,?,?,?)"; 
+	    return sql;
+	    
+	}
+
+    /**
+     * Inserisce nuovi dati nel DB
+     * @return int
+     */
+    public int Insert() {
  	   
         try{          	
              
@@ -160,18 +192,17 @@ public class Soci extends Tables {
 				showMessageDialog(null," Errore  !!! \n " + e.getMessage());
 				e.printStackTrace();
 			}
-            PreparedStatement pstmt = conn.prepareStatement(super.insertHead()); 
+            PreparedStatement pstmt = conn.prepareStatement(insertHead()); 
             
-            pstmt.setInt(1, s.getTessera()); 
-            pstmt.setString(2, s.getName()); 
-            pstmt.setString(3, s.getSecondName()); 
-            pstmt.setString(4, s.getTelephone()); 
-            pstmt.setString(5, s.getAddress()); 
-            pstmt.setInt(6, s.getTipo()); 
+            pstmt.setInt(1, getTessera()); 
+            pstmt.setString(2, getName()); 
+            pstmt.setString(3, getSecondName()); 
+            pstmt.setString(4, getTelephone()); 
+            pstmt.setString(5, getAddress()); 
+            pstmt.setInt(6, getTipo()); 
                         
             int result = pstmt.executeUpdate();  
-            pstmt.close();
-            conn.close();
+            
             return result;
             
             
@@ -185,10 +216,15 @@ public class Soci extends Tables {
         }
     }   
     
-    
+    /**
+     * 
+     * Trova il valore della nuova tessera
+     * @return Integer
+     * 
+     */
     
     public Integer newTessera() {
-    	
+    	Integer max = 0;
     	String sql = " SELECT MAX(tessera) FROM soci;";
     	try {
     		
@@ -201,24 +237,31 @@ public class Soci extends Tables {
 				e.printStackTrace();
 				
 			}
+			
 			Statement stmt = rf.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
-			Integer max = rs.getInt(1) + 1;
-			return max;
+			max = rs.getInt(1) + 1;
+			
     	} 
+    	
     	catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 			showMessageDialog(null," Errore  !!! \n " + e1.getMessage());
-			return null;
+			
     	}
+    	
+    	return max;
     	
     }
     
-
+/**
+ * Dalla tabella Soci estrae una lista di nomi di utenti
+ * @return String[]
+ */
 public String[] getSoci(){  
     	
-    	String table = this.getClass().getSimpleName();
+    	String table = this.getClass().getSimpleName(); // nome della classe
     	
         String sql = "SELECT name,secondname FROM " + table; 
         
@@ -230,11 +273,15 @@ public String[] getSoci(){
         	
         	// create a connection to the database  
             try {
+            	
 				rf = GestionaleBusiness.getConnections();
-			} catch (Exception e) {
+				
+			} 
+            catch (Exception e) {
 				showMessageDialog(null," Errore  !!! \n " + e.getMessage());
 				e.printStackTrace();
 			}
+            
             Statement stmt  = rf.createStatement();  
             ResultSet rs    = stmt.executeQuery(sql);  
             
@@ -242,9 +289,10 @@ public String[] getSoci(){
             // loop through the result set  
             while (rs.next()) {              	
             	
-                result.add(rs.getString(1) + " " + rs.getString(2));
+                result.add(rs.getString(1) + " " + rs.getString(2)); //nome + cognome
                                 
             }  
+            
         } 
         
         catch (SQLException e) {  

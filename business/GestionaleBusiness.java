@@ -117,8 +117,7 @@ public class GestionaleBusiness {
 							ps.setInt(2, data.getId());
 							
 							ps.executeUpdate();
-							ps.close();
-							rf.close();
+							
 							
 						} 
 						
