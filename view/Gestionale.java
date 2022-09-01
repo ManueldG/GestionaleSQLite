@@ -122,7 +122,7 @@ public class Gestionale {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	
 	private void initialize() {
 		
 		frame = new JFrame();
@@ -260,8 +260,19 @@ public class Gestionale {
 				soci.setTipo( comboBox.getSelectedIndex());
 				soci.setTelephone(textField_4.getText());	
 													
-				soci.Insert();				
+				soci.Insert();	
+				Vector row = new Vector();
 				
+				
+				row.add(soci.getTessera());
+				row.add(soci.getName());
+				row.add(soci.getSecondName());
+				row.add(soci.getAddress());
+				row.add(soci.getTipo());
+				row.add(soci.getTelephone());
+				
+				dtm.addRow(row);	
+						
 				textField.setText("");
 				textField_1.setText("");
 				textField_2.setText(soci.newTessera().toString()); 
